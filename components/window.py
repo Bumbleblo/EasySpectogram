@@ -1,23 +1,51 @@
-from PySide2.QtWidgets import QMainWindow, QAction, QCheckBox, QVBoxLayout
+import PySide2
+from PySide2.QtWidgets import QMainWindow, QAction, QCheckBox, QHBoxLayout, QWidget, QPushButton, QVBoxLayout
+
+from PySide2.QtCharts import QtCharts
+
+import pyqtgraph as plt
 
 class MainWindow(QMainWindow):
 
     __slots__ = ['menu', 'status']
     def __init__(self):
 
-        QMainWindow.__init__(self) # < qt stuff
+        QMainWindow.__init__(self)
         self.setWindowTitle("Easy Spectogram")
         self.menu = self.menuBar()
 
-        self.__status_bar()
-        self.__exit_menu()
-        self.__box()
+        self.status_bar()
+        self.exit_menu()
+        self.central()
 
-    def __status_bar(self):
+    def graph(self):
+
+        chart = QtCharts.QChart()
+
+        chart.setAnimationOptions(QtCharts.QChart.AllAnimations)
+
+        chart_view = QtCharts.QChartView(chart)
+
+        return chart_view
+
+    def central(self):
+
+
+        widget = QWidget()
+
+        layout = QHBoxLayout(widget)
+
+        box = self.box()
+
+        layout.addWidget(box)
+        #layout.addWidget(self.graph())
+        self.setCentralWidget(widget)
+
+    def status_bar(self):
         self.status = self.statusBar()
         self.status.showMessage('placeholder')
 
-    def __exit_menu(self):
+    def exit_menu(self):
 
         self.exit_menu = self.menu.addMenu("Exit")
 
@@ -26,14 +54,17 @@ class MainWindow(QMainWindow):
         
         self.exit_menu.addAction(exit_action)
 
-    def __box(self):
+    def box(self):
 
-        self.box = QVBoxLayout()
+        widget = QWidget()
 
-        check1 = QCheckBox("teste 1", self)
-        check2 = QCheckBox("teste 2", self)
+        layout = QVBoxLayout(widget)
 
-        self.box.addWidget(check1)
-        self.box.addWidget(check2)
+        layout.addWidget(QPushButton("Butterworth"))
+        layout.addWidget(QPushButton("Chebyshev"))
+        layout.addWidget(QPushButton("Elliptic"))
 
-        self.setLayout(self.box)
+        return widget
+
+        
+        return widget
